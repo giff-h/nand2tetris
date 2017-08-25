@@ -4,8 +4,8 @@
 // File name: projects/01/Mux16.hdl
 
 /**
- * 16-bit multiplexor: 
- * for i = 0..15 out[i] = a[i] if sel == 0 
+ * 16-bit multiplexor:
+ * for i = 0..15 out[i] = a[i] if sel == 0
  *                        b[i] if sel == 1
  */
 
@@ -14,5 +14,42 @@ CHIP Mux16 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    Not(in=sel, out=nSel);
+    And16(a=a,
+    b[0]=nSel,
+    b[1]=nSel,
+    b[2]=nSel,
+    b[3]=nSel,
+    b[4]=nSel,
+    b[5]=nSel,
+    b[6]=nSel,
+    b[7]=nSel,
+    b[8]=nSel,
+    b[9]=nSel,
+    b[10]=nSel,
+    b[11]=nSel,
+    b[12]=nSel,
+    b[13]=nSel,
+    b[14]=nSel,
+    b[15]=nSel,
+    out=selA);
+    And16(a=b,
+    b[0]=sel,
+    b[1]=sel,
+    b[2]=sel,
+    b[3]=sel,
+    b[4]=sel,
+    b[5]=sel,
+    b[6]=sel,
+    b[7]=sel,
+    b[8]=sel,
+    b[9]=sel,
+    b[10]=sel,
+    b[11]=sel,
+    b[12]=sel,
+    b[13]=sel,
+    b[14]=sel,
+    b[15]=sel,
+    out=selB);
+    Or16(a=selA, b=selB, out=out);
 }
