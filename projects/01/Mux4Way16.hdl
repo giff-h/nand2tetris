@@ -18,11 +18,15 @@ CHIP Mux4Way16 {
     PARTS:
     Not(in=sel[0], out=nSelA); // 2**0, 'right' digit
     Not(in=sel[1], out=nSelB); // 2**1, 'left' digit
-    AndSwitch16(a=a, b=nSelA, c=nSelB, out=selA);
-    AndSwitch16(a=b, b=sel[0], c=nSelB, out=selB);
-    AndSwitch16(a=c, b=nSelA, c=sel[1], out=selC);
-    AndSwitch16(a=d, b=sel[0], c=sel[1], out=selD);
-    Or16(a=selA, b=selB, out=selAB);
-    Or16(a=selC, b=selD, out=selCD);
-    Or16(a=selAB, b=selCD, out=out);
+    And(a=nSelA, b=nSelB, out=selA);
+    And(a=sel[0], b=nSelB, out=selB);
+    And(a=nSelA, b=sel[1], out=selC);
+    And(a=sel[0], b=sel[1], out=selD);
+    Mux16(b=a, sel=selA, out=outA);
+    Mux16(b=b, sel=selB, out=outB);
+    Mux16(b=c, sel=selC, out=outC);
+    Mux16(b=d, sel=selD, out=outD);
+    Or16(a=outA, b=outB, out=outAB);
+    Or16(a=outC, b=outD, out=outCD);
+    Or16(a=outAB, b=outCD, out=out);
 }

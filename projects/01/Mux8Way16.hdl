@@ -21,7 +21,7 @@ CHIP Mux8Way16 {
     Not(in=sel[2], out=abcdSel);
     Mux4Way16(a=a, b=b, c=c, d=d, sel=sel[0..1], out=abcd);
     Mux4Way16(a=e, b=f, c=g, d=h, sel=sel[0..1], out=efgh);
-    AndSwitch16(a=abcd, b=abcdSel, c=true, out=abcdOut);
-    AndSwitch16(a=efgh, b=sel[2], c=true, out=efghOut);
+    Mux16(b=abcd, sel=abcdSel, out=abcdOut);
+    Mux16(b=efgh, sel=sel[2], out=efghOut);
     Or16(a=abcdOut, b=efghOut, out=out);
 }
