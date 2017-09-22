@@ -5,8 +5,8 @@
 
 /**
  * Memory of 16K registers, each 16 bit-wide. Out holds the value
- * stored at the memory location specified by address. If load==1, then 
- * the in value is loaded into the memory location specified by address 
+ * stored at the memory location specified by address. If load==1, then
+ * the in value is loaded into the memory location specified by address
  * (the loaded value will be emitted to out from the next time step onward).
  */
 
@@ -15,5 +15,21 @@ CHIP RAM16K {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    Not(in=address[0], out=nAddrA);
+    Not(in=address[1], out=nAddrB);
+    And(a=address[0], b=address[1], out=pinA);
+    And(a=address[0], b=nAddrB, out=pinB);
+    And(a=nAddrA, b=address[1], out=pinC);
+    And(a=nAddrA, b=nAddrB, out=pinD);
+    And(a=pinA, b=load, out=loadRegD);
+    And(a=pinB, b=load, out=loadRegC);
+    And(a=pinC, b=load, out=loadRegB);
+    And(a=pinD, b=load, out=loadRegA);
+    RAM4K(in=in, load=loadRegA, address=address[2..13], out=outRegA);
+    RAM4K(in=in, load=loadRegB, address=address[2..13], out=outRegB);
+    RAM4K(in=in, load=loadRegC, address=address[2..13], out=outRegC);
+    RAM4K(in=in, load=loadRegD, address=address[2..13], out=outRegD);
+    Mux16(a=outRegA, b=outRegB, sel=address[1], out=outRegAB);
+    Mux16(a=outRegC, b=outRegD, sel=address[1], out=outRegCD);
+    Mux16(a=outRegAB, b=outRegCD, sel=address[0], out=out);
 }
