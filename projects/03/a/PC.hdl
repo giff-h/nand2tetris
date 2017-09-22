@@ -12,9 +12,17 @@
  */
 
 CHIP PC {
-    IN in[16],load,inc,reset;
+    IN in[16], load, inc, reset;
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    Or(a=load, b=inc, out=regLoadA);
+    Or(a=regLoadA, b=reset, out=regLoad);
+    Inc16(in=regOut, out=regInc);
+    Mux16(a=false, b=regInc, sel=inc, out=incSel);
+    Mux16(a=incSel, b=in, sel=load, out=loadSel);
+    Mux16(a=loadSel, b=false, sel=reset, out=regIn);
+    Register(in=regIn, load=regLoad, out=regOut);
+    Not16(in=regOut, out=buffer);
+    Not16(in=buffer, out=out);
 }
