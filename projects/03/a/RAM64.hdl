@@ -5,8 +5,8 @@
 
 /**
  * Memory of 64 registers, each 16 bit-wide. Out holds the value
- * stored at the memory location specified by address. If load==1, then 
- * the in value is loaded into the memory location specified by address 
+ * stored at the memory location specified by address. If load==1, then
+ * the in value is loaded into the memory location specified by address
  * (the loaded value will be emitted to out from the next time step onward).
  */
 
@@ -15,5 +15,36 @@ CHIP RAM64 {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    Not(in=address[0], out=nAddrA);
+    Not(in=address[1], out=nAddrB);
+    Not(in=address[2], out=nAddrC);
+    And(a=load, b=address[0], out=pinA);
+    And(a=load, b=nAddrA, out=pinB);
+    And(a=address[1], b=address[2], out=pinC);
+    And(a=address[1], b=nAddrC, out=pinD);
+    And(a=nAddrB, b=address[2], out=pinE);
+    And(a=nAddrB, b=nAddrC, out=pinF);
+    And(a=pinA, b=pinC, out=loadRegH);
+    And(a=pinA, b=pinD, out=loadRegG);
+    And(a=pinA, b=pinE, out=loadRegF);
+    And(a=pinA, b=pinF, out=loadRegE);
+    And(a=pinB, b=pinC, out=loadRegD);
+    And(a=pinB, b=pinD, out=loadRegC);
+    And(a=pinB, b=pinE, out=loadRegB);
+    And(a=pinB, b=pinF, out=loadRegA);
+    RAM8(in=in, load=loadRegA, address=address[3..5], out=outRegA);
+    RAM8(in=in, load=loadRegB, address=address[3..5], out=outRegB);
+    RAM8(in=in, load=loadRegC, address=address[3..5], out=outRegC);
+    RAM8(in=in, load=loadRegD, address=address[3..5], out=outRegD);
+    RAM8(in=in, load=loadRegE, address=address[3..5], out=outRegE);
+    RAM8(in=in, load=loadRegF, address=address[3..5], out=outRegF);
+    RAM8(in=in, load=loadRegG, address=address[3..5], out=outRegG);
+    RAM8(in=in, load=loadRegH, address=address[3..5], out=outRegH);
+    Mux16(a=outRegA, b=outRegB, sel=address[2], out=outRegAB);
+    Mux16(a=outRegC, b=outRegD, sel=address[2], out=outRegCD);
+    Mux16(a=outRegE, b=outRegF, sel=address[2], out=outRegEF);
+    Mux16(a=outRegG, b=outRegH, sel=address[2], out=outRegGH);
+    Mux16(a=outRegAB, b=outRegCD, sel=address[1], out=outRegAD);
+    Mux16(a=outRegEF, b=outRegGH, sel=address[1], out=outRegEH);
+    Mux16(a=outRegAD, b=outRegEH, sel=address[0], out=out);
 }
